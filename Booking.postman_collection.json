@@ -17,7 +17,7 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
+									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"const respone= pm.response.json()\r",
 									"pm.collectionVariables.set(\"access_token\",respone.token)\r",
@@ -166,7 +166,7 @@
 							"script": {
 								"exec": [
 									"pm.collectionVariables.set(\"dataFirstname_update\", \"MinhLan\");\r",
-									"pm.collectionVariables.set(\"dataprice_update\",\"150\");\r",
+									"pm.collectionVariables.set(\"dataprice_update\",\"124\");\r",
 									""
 								],
 								"type": "text/javascript",
