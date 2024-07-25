@@ -166,7 +166,7 @@
 							"script": {
 								"exec": [
 									"pm.collectionVariables.set(\"dataFirstname_update\", \"MinhLan\");\r",
-									"pm.collectionVariables.set(\"dataprice_update\",\"150\");\r",
+									"pm.collectionVariables.set(\"dataprice_update\",\"124\");\r",
 									""
 								],
 								"type": "text/javascript",
