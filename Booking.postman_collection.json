@@ -278,7 +278,7 @@
 									"    fail: 0,\r",
 									"    pass: 0\r",
 									"};\r",
-									"pm.test(\"Status code is 400\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"const getresponse = pm.response.code;\r",
