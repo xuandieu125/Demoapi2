@@ -16,8 +16,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 400\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"const respone= pm.response.json()\r",
 									"pm.collectionVariables.set(\"access_token\",respone.token)\r",
@@ -177,8 +177,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"   const getResponse = pm.response.json();\r",
 									"    const firstname_actual = getResponse.firstname;\r",
@@ -244,7 +244,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\"firstname\" : \"MinhLan\",\r\n\"lastname\" : \"tran\",\r\n\"totalprice\" :\"{{dataprice_update}}\",\r\n\"depositpaid\" : true,\r\n\"bookingdates\" : {\r\n\r\n\"checkin\" : \"2018-01-01\",\r\n\"checkout\" : \"2019-01-01\"\r\n},\r\n\"additionalneeds\" : \"Breakfast\"\r\n}",
+							"raw": "{\r\n\"firstname\" : \"MinhLan\",\r\n\"lastname\" : \"tran\",\r\n\"totalprice\" :\"124\",\r\n\"depositpaid\" :true,\r\n\"bookingdates\" : {\r\n\r\n\"checkin\" : \"2025/01/01\",\r\n\"checkout\" : \"2019-01-01\"\r\n},\r\n\"additionalneeds\" : \"true\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
