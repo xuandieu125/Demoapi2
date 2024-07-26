@@ -16,7 +16,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
+									"pm.test(\"Status HTTP code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"const respone= pm.response.json()\r",
@@ -166,7 +166,7 @@
 							"script": {
 								"exec": [
 									"pm.collectionVariables.set(\"dataFirstname_update\", \"MinhLan\");\r",
-									"pm.collectionVariables.set(\"dataprice_update\",\"150\");\r",
+									"pm.collectionVariables.set(\"dataprice_update\",\"124\");\r",
 									""
 								],
 								"type": "text/javascript",
@@ -177,8 +177,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 400\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"   const getResponse = pm.response.json();\r",
 									"    const firstname_actual = getResponse.firstname;\r",
