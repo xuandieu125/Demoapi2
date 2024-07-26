@@ -4,7 +4,7 @@ pipeline {
         stage('Run Postman Tests') {
             steps {
                 // Sử dụng dấu / thay cho \
-                bat 'newman run C:/ProgramData/Jenkins/.jenkins/workspace/Demo5.2-email-freestyle/Booking.postman_collection.json'
+                bat 'newman run C:/ProgramData/Jenkins/.jenkins/workspace/Demo5.3/Booking.postman_collection.json'
             }
         }
     }
