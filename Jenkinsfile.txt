@@ -1,13 +1,17 @@
 pipeline {
     agent any
- stage('Run Postman Tests') {
+    stages {
+        stage('Checkout') {
             steps {
-                script {
-                    
+                // Checkout code từ GitHub
                 git 'https://github.com/xuandieu125/Demoapi2.git'
-                
-                }
             }
         }
-
-   }
+        stage('Run Postman Tests') {
+            steps {
+                // Chạy Newman với tệp collection từ repository
+                bat 'newman run C:\ProgramData\Jenkins\.jenkins\workspace\Demo5.2-email-freestyle\Booking.postman_collection.json'
+            }
+        }
+    }
+}
