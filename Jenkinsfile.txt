@@ -1,0 +1,13 @@
+pipeline {
+    agent any
+ stage('Run Postman Tests') {
+            steps {
+                script {
+                    
+                git 'https://github.com/xuandieu125/Demoapi2.git'
+                
+                }
+            }
+        }
+
+   }
