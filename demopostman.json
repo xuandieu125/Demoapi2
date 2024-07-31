@@ -1,0 +1,278 @@
+{
+	"info": {
+		"_postman_id": "7cec271a-aa62-4bd3-9118-a71a16865761",
+		"name": "DemoPostman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "31294932"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"let statCode = pm.response.code;\r",
+							"if(statCode== 200){\r",
+							"    const responseData = pm.response.json();\r",
+							"    const tokenAuth = responseData.token;\r",
+							"    pm.environment.set(\"token\", tokenAuth);\r",
+							"    console.log(tokenAuth);\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\" : \"admin\",\r\n    \"password\" : \"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://restful-booker.herokuapp.com/auth"
+			},
+			"response": []
+		},
+		{
+			"name": "CreateBooking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"console.log('Response:', pm.response.json());\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const responseData = pm.response.json();\r",
+							"console.log(responseData);\r",
+							"\r",
+							"// Lấy response JSON\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"let bookingId = parseInt(responseData.bookingid);\r",
+							"pm.environment.set(\"bookingId\", bookingId);\r",
+							"\r",
+							"pm.test(\"Totalprice is a number or status code is 400\", function () {\r",
+							"    const responseData = pm.response.json();    \r",
+							"    // Kiểm tra nếu totalprice không phải là số\r",
+							"    if (typeof responseData.booking.totalprice !== 'number') {\r",
+							"        // Nếu totalprice không phải là số, kiểm tra mã trạng thái là 400\r",
+							"        pm.expect(pm.response.code).to.eql(400, \"Expected status code to be 400 when totalprice is not a number\");\r",
+							"    } else {\r",
+							"        // Nếu totalprice là số, kiểm tra mã trạng thái là 200\r",
+							"        pm.expect(pm.response.code).to.eql(200, \"Expected status code to be 200 when totalprice is a number\");\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Lấy dữ liệu từ file CSV\r",
+							"const requestData = pm.iterationData.toObject();\r",
+							"console.log(requestData);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\" : \"{{firstName}}\",\r\n    \"lastname\" : \"{{lastName}}\",\r\n    \"totalprice\" :\"{{totalPrice}}\",\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n    \"checkin\" : \"{{checkinDate}}\",\r\n    \"checkout\" : \"{{checkoutDate}}\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://restful-booker.herokuapp.com/booking"
+			},
+			"response": []
+		},
+		{
+			"name": "GetBooking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://restful-booker.herokuapp.com/booking/{{bookingId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateBooking",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"totalPriceUpdate\", 123456);\r",
+							"pm.environment.set(\"firstNameUpdate\", \"vydoan123\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Kiểm tra mã trạng thái của response là 405\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const expectedTotalprice = pm.environment.get(\"totalPriceUpdate\");\r",
+							"console.log(expectedTotalprice);\r",
+							"pm.test(\"Check totalprice after update\", function(){\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.totalprice).to.equal(expectedTotalprice);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token={{tokenAuth}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic YWRtaW46cGFzc3dvcmQxMjM=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\" : \"{{firstNameUpdate}}\",\r\n    \"lastname\" : \"{{lastNameUpdate}}\",\r\n    \"totalprice\" :\"{{totalPriceUpdate}}\",\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n    \"checkin\" : \"{{checkinDate}}\",\r\n    \"checkout\" : \"{{checkoutDate}}\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://restful-booker.herokuapp.com/booking/{{bookingId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "DeleBooking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token={{tokenAuth}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic YWRtaW46cGFzc3dvcmQxMjM=",
+						"type": "text"
+					}
+				],
+				"url": "https://restful-booker.herokuapp.com/booking/{{bookingId}}"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "BookingID",
+			"value": "BookingID"
+		},
+		{
+			"key": "bookingId",
+			"value": "bookingId"
+		},
+		{
+			"key": "tokenAuth",
+			"value": "tokenHeader"
+		}
+	]
+}
