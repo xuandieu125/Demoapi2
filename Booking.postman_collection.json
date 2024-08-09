@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a7793393-4567-4994-828f-08b34024b19a",
+		"_postman_id": "77daaf74-3e84-4e2e-8678-6de58064ef23",
 		"name": "Booking",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "26342670"
@@ -19,18 +19,47 @@
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"const respone= pm.response.json()\r",
-									"pm.collectionVariables.set(\"access_token\",respone.token)\r",
-									"console.log(respone)\r",
-									"\r",
-									"pm.test(\"Response headers do not contain sensitive information\", function () {\r",
-									"    var headers = pm.response.headers.all();\r",
-									"    headers.forEach(function (header) {\r",
-									"        pm.expect(header.key).to.not.be.oneOf(['Authorization', 'X-API-KEY']);\r",
-									"    });\r",
-									"});\r",
+									"const token =pm.response.json().token;\r",
+									"pm.environment.set(\"access_token\", token);\r",
 									"\r",
 									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"// const respone= pm.response.json()\r",
+									"// pm.environment.set(\"access_token\", respone.token);\r",
+									"\r",
+									"// pm.test(\"Response headers do not contain sensitive information\", function () {\r",
+									"//     var headers = pm.response.headers.all();\r",
+									"//     headers.forEach(function (header) {\r",
+									"//         pm.expect(header.key).to.not.be.oneOf(['Authorization', 'X-API-KEY']);\r",
+									"//     });\r",
+									"// });\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
 									""
 								],
 								"type": "text/javascript",
@@ -54,12 +83,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://restful-booker.herokuapp.com/auth",
-							"protocol": "https",
+							"raw": "{{url}}/auth",
 							"host": [
-								"restful-booker",
-								"herokuapp",
-								"com"
+								"{{url}}"
 							],
 							"path": [
 								"auth"
@@ -75,48 +101,31 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"const moment = require('moment');\r",
+									" const getResponse = pm.response.json();\r",
+									" const bookingID_update1 = getResponse.bookingid;\r",
+									"pm.environment.set(\"BookingID_update\", bookingID_update1);\r",
 									"\r",
-									"// Hàm kiểm tra ngày tháng hợp lệ\r",
-									"function isValidDate(dateString, format) {\r",
-									"    return moment(dateString, format, true).isValid();\r",
-									"}\r",
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
 									"\r",
-									"if (pm.response.code === 200) {\r",
-									"    // Lấy dữ liệu thực tế từ phản hồi\r",
-									"    const getResponse = pm.response.json();\r",
-									"    const checKin_actual = getResponse.booking.bookingdates.checkin;\r",
-									"    const checkout_actual = getResponse.booking.bookingdates.checkout;\r",
+									"pm.test(\"Content-Type header is application/json\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+									"});\r",
 									"\r",
-									"    // Dữ liệu mong đợi\r",
-									"    const checkin_expected = pm.iterationData.get(\"Checkin\");\r",
-									"    const checkout_expected = pm.iterationData.get(\"Checkout\");\r",
 									"\r",
-									"    // Xử lý dữ liệu thực tế\r",
-									"    let checKin_actual_valid = checKin_actual && isValidDate(checKin_actual, 'YYYY-MM-DD') ? checKin_actual : null;\r",
-									"    let checkout_actual_valid = checkout_actual && isValidDate(checkout_actual, 'YYYY-MM-DD') ? checkout_actual : null;\r",
+									"pm.test(\"Validate the booking object\", function () {\r",
+									"    const responseData = pm.response.json();\r",
 									"\r",
-									"    // Kiểm tra dữ liệu thực tế với dữ liệu mong đợi\r",
-									"    pm.test(\"Verify response is correct\", function () {\r",
-									"        pm.expect(checKin_actual_valid).to.eql(checkin_expected || null);\r",
-									"        pm.expect(checkout_actual_valid).to.eql(checkout_expected || null);\r",
-									"    });\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.booking).to.exist.and.to.be.an('object');\r",
+									"});\r",
 									"\r",
-									"    // Kiểm tra định dạng ngày tháng\r",
-									"    pm.test(\"Verify date format\", function () {\r",
-									"        pm.expect(isValidDate(checKin_actual, 'YYYY-MM-DD')).not.to.be.true;\r",
-									"        pm.expect(isValidDate(checkout_actual, 'YYYY-MM-DD')).not.to.be.true;\r",
-									"    });\r",
-									"\r",
-									"    // Lưu Booking ID vào biến collection\r",
-									"    const bookingID_update = getResponse.bookingid;\r",
-									"    pm.collectionVariables.set(\"BookingID_update1\", bookingID_update);\r",
-									"} else {\r",
-									"    pm.test(\"Status code is error\", function () {\r",
-									"        const status = pm.iterationData.get('Status');\r",
-									"        pm.response.to.have.status(status);\r",
-									"    });\r",
-									"}"
+									"pm.test(\"Totalprice is a non-negative number\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.booking.totalprice).to.exist.and.to.be.at.least(0, \"Totalprice should be a non-negative number\");\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -138,7 +147,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\"firstname\" : \"{{firstName}}\",\r\n\"lastname\" : \"{{lastName}}\",\r\n\"totalprice\" :\"{{totalPrice}}\",\r\n\"depositpaid\" : true,\r\n\"bookingdates\" : {\r\n\"checkin\" : \"{{Checkin}}\",\r\n\"checkout\" : \"{{Checkout}}\"\r\n},\r\n\"additionalneeds\" : \"Breakfast\"\r\n}",
+							"raw": "{\r\n    \"firstname\" : \"{{firstnameC}}\",\r\n    \"lastname\" : \"{{lastnameC}}\",\r\n    \"totalprice\" : \"{{totalpriceC}}\",\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n    \"checkin\" : \"{{checkinC}}\",\r\n    \"checkout\" : \"{{checkoutC}}\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -146,12 +155,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://restful-booker.herokuapp.com/booking",
-							"protocol": "https",
+							"raw": "{{url}}/booking",
 							"host": [
-								"restful-booker",
-								"herokuapp",
-								"com"
+								"{{url}}"
 							],
 							"path": [
 								"booking"
@@ -167,8 +173,8 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.collectionVariables.set(\"dataFirstname_update\", \"MinhLan\");\r",
-									"pm.collectionVariables.set(\"dataprice_update\",\"124\");\r",
+									"// pm.collectionVariables.set(\"dataFirstname_update\", \"MinhLan\");\r",
+									"// pm.collectionVariables.set(\"dataprice_update\",\"124\");\r",
 									""
 								],
 								"type": "text/javascript",
@@ -182,45 +188,50 @@
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"   const getResponse = pm.response.json();\r",
-									"    const firstname_actual = getResponse.firstname;\r",
-									"    const lastname_actual = getResponse.lastname;\r",
-									"    const price_actual = parseInt(getResponse.totalprice);\r",
-									"    // Data input expected\r",
-									"    const FirstName_expected = pm.collectionVariables.get(\"dataFirstname_update\");\r",
-									"    const price_expected = pm.collectionVariables.get(\"dataprice_update\");\r",
 									"\r",
-									"    //The first information  of create\r",
-									"    const firstName_init =pm.iterationData.get(\"firstName\")\r",
-									"    const lastName_init =pm.iterationData.get(\"lastName\")\r",
-									"    const price_init =pm.iterationData.get(\"totalPrice\")\r",
+									"// Lấy phản hồi JSON\r",
+									"const getResponse = pm.response.json();\r",
+									"const firstnameU_actual = getResponse.firstname;\r",
+									"const lastnameU_actual = getResponse.lastname;\r",
+									"const priceU_actual = parseInt(getResponse.totalprice);\r",
 									"\r",
-									"    // Compare data actual with input expected\r",
-									"    pm.test(\"Check response is correct as new information\", function () {\r",
-									"        pm.expect(firstname_actual).to.eql(FirstName_expected);\r",
-									"        pm.expect(Number(price_actual)).to.eql(Number(price_expected));\r",
-									"    });\r",
-									"    // Compare data actual with input expected create a booking\r",
-									"    pm.test(\"Check response is not the same with the first information \", function () {\r",
-									"        pm.expect(firstname_actual).not.to.eql( firstName_init);\r",
-									"        pm.expect(lastname_actual).not.to.eql(lastName_init);\r",
-									"        pm.expect(Number(price_actual)).not.to.eql(Number(price_init));\r",
-									"    });\r",
+									"// Dữ liệu đầu vào mong đợi\r",
+									"const firstnameU_expected = pm.iterationData.get(\"firstnameU\");\r",
+									"const priceU_expected = pm.iterationData.get(\"totalpriceU\");\r",
+									"\r",
+									"const firstName_init = pm.iterationData.get(\"firstnameC\");\r",
+									"const lastName_init = pm.iterationData.get(\"lastnameC\");\r",
+									"const price_init = pm.iterationData.get(\"totalpriceC\");\r",
+									"\r",
+									"pm.test(\"Check response is correct as new information\", function () {\r",
+									"    pm.expect(firstnameU_actual).to.eql(firstnameU_expected);\r",
+									"    pm.expect(Number(priceU_actual)).to.eql(Number(priceU_expected));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response is not the same with the first information\", function () {\r",
+									"    pm.expect(firstnameU_actual).not.to.eql(firstName_init);\r",
+									"    pm.expect(lastnameU_actual).not.to.eql(lastName_init);\r",
+									"    pm.expect(Number(priceU_actual)).not.to.eql(Number(price_init));\r",
+									"});\r",
+									"\r",
+									"// Kiểm tra biến Cookie\r",
 									"const headers = pm.request.headers.toObject();\r",
-									"const access_token = pm.collectionVariables.get(\"access_token\");\r",
-									"pm.test(\"Cookie variable should not exist or be empty\", function () {\r",
-									"        pm.expect(access_token).to.not.be.oneOf([null, undefined, '']);\r",
-									"    });\r",
+									"const access_token = pm.environment.get(\"access_token\");\r",
+									"\r",
+									"pm.test(\"Access token variable should not be null or undefined\", function () {\r",
+									"    pm.expect(access_token).to.not.be.oneOf([null, undefined, '']);\r",
+									"});\r",
 									"\r",
 									"const cookieActual = headers['cookie'];\r",
 									"pm.test(\"Cookie header should match expected value\", function () {\r",
-									" pm.expect(cookieActual).to.equal(`token=${access_token}`)\r",
+									"    pm.expect(cookieActual).to.equal(`token=${access_token}`);\r",
 									"});\r",
 									"\r",
 									"const authorizationActual = headers['authorization'];\r",
 									"pm.test(\"Authorization header should match expected value\", function () {\r",
-									"     pm.expect(authorizationActual).to.equal(`basic${access_token}`);\r",
-									"});"
+									"    pm.expect(authorizationActual).to.equal(`basic${access_token}`); \r",
+									"});\r",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -246,7 +257,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\"firstname\" : \"MinhLan\",\r\n\"lastname\" : \"tran\",\r\n\"totalprice\" :\"124\",\r\n\"depositpaid\" :true,\r\n\"bookingdates\" : {\r\n\r\n\"checkin\" : \"2025/01/01\",\r\n\"checkout\" : \"2019-01-01\"\r\n},\r\n\"additionalneeds\" : \"true\"\r\n}",
+							"raw": "{\r\n\"firstname\" : \"{{firstnameU}}\",\r\n\"lastname\" : \"{{lastnameU}}\",\r\n\"totalprice\" :\"{{toalpriceU}}\",\r\n\"depositpaid\" :true,\r\n\"bookingdates\" : {\r\n\r\n\"checkin\" : \"{{checkinU}}\",\r\n\"checkout\" : \"{{checkoutU}}\"\r\n},\r\n\"additionalneeds\" : \"true\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -254,16 +265,13 @@
 							}
 						},
 						"url": {
-							"raw": "https://restful-booker.herokuapp.com/booking/{{BookingID_update1}}",
-							"protocol": "https",
+							"raw": "{{url}}/booking/{{BookingID_update}}",
 							"host": [
-								"restful-booker",
-								"herokuapp",
-								"com"
+								"{{url}}"
 							],
 							"path": [
 								"booking",
-								"{{BookingID_update1}}"
+								"{{BookingID_update}}"
 							]
 						}
 					},
@@ -280,7 +288,7 @@
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"pm.test(\"Cookie variable should not exist or be empty\", function () {\r",
-									"    const cookie_update = pm.variables.get(\"access_token\");\r",
+									"    const cookie_update = pm.environment.get(\"access_token\");\r",
 									"    pm.expect(cookie_update).to.not.oneOf([null, undefined, '']);\r",
 									"});\r",
 									"\r",
@@ -288,9 +296,9 @@
 									"    pm.expect(pm.response.text()).to.eql(\"Created\"); \r",
 									"});\r",
 									"const headers = pm.request.headers.toObject();\r",
-									"const access_token = pm.collectionVariables.get(\"access_token\");\r",
+									"const access_token = pm.environment.get(\"access_token\");\r",
 									"pm.test(\"Cookie variable should not exist or be empty\", function () {\r",
-									"        pm.expect(access_token).to.not.be.oneOf([null, undefined, '']);\r",
+									"pm.expect(access_token).to.not.be.oneOf([null, undefined, '']);\r",
 									"    });\r",
 									"\r",
 									"const cookieActual = headers['cookie'];\r",
@@ -323,16 +331,13 @@
 							}
 						],
 						"url": {
-							"raw": "https://restful-booker.herokuapp.com/booking/{{BookingID_update1}}",
-							"protocol": "https",
+							"raw": "{{url}}/booking/{{BookingID_update}}",
 							"host": [
-								"restful-booker",
-								"herokuapp",
-								"com"
+								"{{url}}"
 							],
 							"path": [
 								"booking",
-								"{{BookingID_update1}}"
+								"{{BookingID_update}}"
 							]
 						}
 					},
@@ -348,7 +353,7 @@
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"const BOOKING_delete = pm.collectionVariables.get(\"BookingID_update1\");\r",
+									"const BOOKING_delete = pm.environment.get(\"BookingID_update1\");\r",
 									"pm.test(\"verify response has booking ID that is deleted \"+\"\"+ BOOKING_delete, function () {\r",
 									"pm.expect(pm.response.text()).not.to.include(BOOKING_delete);\r",
 									"});"
@@ -374,12 +379,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://restful-booker.herokuapp.com/booking",
-							"protocol": "https",
+							"raw": "{{url}}/booking",
 							"host": [
-								"restful-booker",
-								"herokuapp",
-								"com"
+								"{{url}}"
 							],
 							"path": [
 								"booking"
